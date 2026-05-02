@@ -26,7 +26,8 @@
             display: block;
             image-rendering: pixelated;
             margin-top: 20px;
-            min-width: 320px; /* Sécurité anti-disparition */
+            min-width: 320px;
+            /* Sécurité anti-disparition */
             min-height: 240px;
         }
 
@@ -424,7 +425,7 @@
         // But since run() may not be exported, we use preRun with sync XHR fallback
         // System is fixed to phc25
         var driver = 'phc25';
-        Module.arguments = [driver, '-rompath', '/roms', '-nothrottle', '-video', 'accel', '-resolution', '640x480', '-keepaspect', '-window'];
+        Module.arguments = [driver, '-rompath', '/roms', '-video', 'accel', '-resolution', '640x480', '-keepaspect', '-window'];
 
         // Check for game to load (URL parameter has priority, then sessionStorage)
         var urlParams = new URLSearchParams(window.location.search);
@@ -440,9 +441,9 @@
                     Module.arguments.push('-autoboot_delay', '1');
                     Module.arguments.push('-autoboot_command', '1CLOAD\\n');
                     log('💿 Loading cassette: ' + fileName);
-                    
+
                     // Auto-scroll to emulator
-                    setTimeout(function() {
+                    setTimeout(function () {
                         document.getElementById('canvas').scrollIntoView({ behavior: 'smooth' });
                     }, 500);
 
