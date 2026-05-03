@@ -1,0 +1,11 @@
+brickinv.sta.bin=Briques Stellaires|https://mokona78.itch.io/le-casseur-de-briques
+city.sta.bin=City of crime|https://kikich10gmailcom.itch.io/city-of-crime
+comme_une_boule_de_flipper_v1.0.sta.bin=Comme une boule de flipper|https://stevanr.itch.io/comme-une-boule-de-flipper
+dontfall.sta.bin=Don't fall|https://ecdhe.itch.io/dont-fall
+maze3d.sta.bin=Maze 3D|https://juvignyensta.itch.io/maze-3d
+memonum.sta.bin=Memo Num|https://ludojoey.itch.io/memonum
+ordipourri.sta.bin=Ordi pourri|https://ecdhe.itch.io/ordi-pourri-sanyo-phc-25
+phetris_1.0_beta3.sta.bin=Phetris|https://tomconte.itch.io/phetris
+rapt.sta.bin=Raptalien|https://juvignyensta.itch.io/raptalien
+turbo1_3.sta.bin=Super Turbo 2000|https://aurelienbricole.itch.io/super-turbo-2000
+welcome.sta.bin=Welcome (Démo)|https://aurelienbricole.itch.io/phc25-welcome

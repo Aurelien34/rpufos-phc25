@@ -437,10 +437,18 @@
                 var fileName = (gameToLoad === 'local') ? data.cassName : gameToLoad;
 
                 if (fileName) {
-                    Module.arguments.push('-cass', '/roms/' + fileName);
-                    Module.arguments.push('-autoboot_delay', '1');
-                    Module.arguments.push('-autoboot_command', '1CLOAD\\n');
-                    log('💿 Loading cassette: ' + fileName);
+                    var isState = fileName.endsWith('.sta');
+
+                    if (isState) {
+                        var stateName = fileName.replace('.sta', '');
+                        Module.arguments.push('-state', stateName);
+                        log('💿 Loading savestate: ' + fileName);
+                    } else {
+                        Module.arguments.push('-cass', '/roms/' + fileName);
+                        Module.arguments.push('-autoboot_delay', '1');
+                        Module.arguments.push('-autoboot_command', '1CLOAD\\n');
+                        log('💿 Loading cassette: ' + fileName);
+                    }
 
                     // Auto-scroll to emulator
                     setTimeout(function () {
@@ -465,6 +473,7 @@
 
             // 1. Ensure directory exists
             try { FS.mkdir('/roms'); } catch (ex) { }
+            try { FS.mkdir('/sta'); FS.mkdir('/sta/phc25'); } catch (ex) { }
 
             // 2. Fetch PHC-25 ROM from server
             var romPromise = fetch('roms/phc25.zip')
@@ -477,11 +486,17 @@
                     log('✅ System ROM loaded: phc25.zip');
                 });
 
-            // 3. Load Cassette from IndexedDB if present
+            // 3. Load Cassette/State from IndexedDB if present
             var cassPromise = loadStoredData().then(function (res) {
                 if (res.cassName && res.cassData) {
-                    FS.writeFile('/roms/' + res.cassName, new Uint8Array(res.cassData));
-                    log('✅ Cassette mounted: ' + res.cassName);
+                    var data = new Uint8Array(res.cassData);
+                    if (res.cassName.endsWith('.sta')) {
+                        FS.writeFile('/sta/phc25/' + res.cassName, data);
+                        log('✅ Savestate mounted: ' + res.cassName);
+                    } else {
+                        FS.writeFile('/roms/' + res.cassName, data);
+                        log('✅ Cassette mounted: ' + res.cassName);
+                    }
                 }
             });
 
@@ -552,11 +567,21 @@
         }
 
         function loadRemoteCassette(fileName) {
-            var url = 'cass/' + fileName;
-            // Rename .bin to .phc for MAME if necessary
-            var targetFileName = fileName.endsWith('.bin') ? fileName.replace('.bin', '.phc') : fileName;
+            var isState = fileName.endsWith('.sta.bin');
+            var folder = isState ? 'savestates/' : 'cass/';
+            var url = folder + fileName;
 
-            console.log('Fetching cassette from:', url, '-> Target:', targetFileName);
+            // Rename .bin to .phc or .sta for MAME
+            var targetFileName = fileName;
+            if (isState) {
+                targetFileName = fileName.replace('.sta.bin', '.sta');
+            } else if (fileName.endsWith('.phc.bin')) {
+                targetFileName = fileName.replace('.phc.bin', '.phc');
+            } else if (fileName.endsWith('.bin')) {
+                targetFileName = fileName.replace('.bin', '.phc');
+            }
+
+            console.log('Fetching media from:', url, '-> Target:', targetFileName);
             romStatus.textContent = 'Fetching ' + fileName + '...';
             loadBtn.disabled = true;
 
@@ -588,7 +613,7 @@
             var library = document.getElementById('game-library');
             library.innerHTML = ''; // Clear previous
 
-            fetch('cass/gamelist.txt')
+            fetch('gamelist.txt')
                 .then(res => {
                     if (!res.ok) throw new Error('gamelist.txt not found');
                     return res.text();
@@ -608,9 +633,9 @@
                         var title = data[0].trim();
                         var officialUrl = data[1] ? data[1].trim() : null;
 
-                        // Image path: cass/images/filename (without .phc/.bin) + .png
-                        var baseName = fileName.replace(/\.(phc|bin|cas|wav)$/i, '');
-                        var imgPath = 'cass/images/' + baseName + '.png';
+                        // Image path: strip .sta.bin, .phc.bin or simple extensions
+                        var baseName = fileName.replace('.sta.bin', '').replace('.phc.bin', '').replace('.bin', '').replace('.phc', '');
+                        var imgPath = 'images/' + baseName + '.png';
 
                         var card = document.createElement('div');
                         card.className = 'game-card';
