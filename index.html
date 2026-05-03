@@ -49,6 +49,18 @@
             flex-direction: column;
         }
 
+        .header-link {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .header-link:hover {
+            opacity: 0.9;
+        }
+
         h1,
         h2 {
             margin: 0;
@@ -280,11 +292,13 @@
 
 <body>
     <header>
-        <img src="rpufos.png" alt="Logo" class="logo">
-        <div class="header-text">
-            <h1>Online Sanyo PHC25 emulation</h1>
-            <h2>Retro Programmers United for Obscure Systems edition</h2>
-        </div>
+        <a href="." class="header-link">
+            <img src="rpufos.png" alt="Logo" class="logo">
+            <div class="header-text">
+                <h1>Online Sanyo PHC25 emulation</h1>
+                <h2>Retro Programmers United for Obscure Systems edition</h2>
+            </div>
+        </a>
     </header>
 
     <div class="community-links">
